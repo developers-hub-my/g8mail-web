@@ -1,0 +1,48 @@
+---
+import '../styles/global.css';
+import { SITE_URL } from '../consts';
+
+interface Props {
+    title?: string;
+    description?: string;
+}
+
+const {
+    title = 'Wau — Catch dev emails. Inspect everything. Never deliver.',
+    description = 'Wau is an SMTP server that captures every email your app sends during development. Inspect HTML, text, raw source, headers and attachments — nothing ever leaves the box. Fully managed in the cloud.',
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, SITE_URL).href;
+---
+
+<!doctype html>
+<html lang="en" class="dark scroll-smooth">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>{title}</title>
+        <meta name="description" content={description} />
+        <link rel="canonical" href={canonical} />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <meta name="generator" content={Astro.generator} />
+
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={canonical} />
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={description} />
+        <meta property="og:site_name" content="Wau" />
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:title" content={title} />
+        <meta name="twitter:description" content={description} />
+
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&display=swap"
+            rel="stylesheet"
+        />
+    </head>
+    <body class="min-h-screen bg-white font-sans antialiased dark:bg-[#0B1120]">
+        <slot />
+    </body>
+</html>

@@ -1,0 +1,102 @@
+---
+import Icon from './Icon.astro';
+---
+
+<section class="border-t border-zinc-200 py-20 sm:py-28 dark:border-white/5">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div class="grid gap-12 lg:grid-cols-5">
+            <div class="lg:col-span-2">
+                <p class="text-sm font-medium uppercase tracking-wider text-amber-600 dark:text-amber-500">Drop in, ship today</p>
+                <h2 class="mt-3 text-3xl font-semibold tracking-tight text-zinc-900 sm:text-4xl dark:text-white">
+                    One line of <code class="font-mono">.env</code>. Your existing code keeps working.
+                </h2>
+                <p class="mt-4 text-zinc-600 dark:text-zinc-400">
+                    Wau speaks plain SMTP. Point your app's <code class="rounded bg-zinc-100 px-1.5 py-0.5 font-mono text-sm text-amber-600 dark:bg-white/5 dark:text-amber-400">MAIL_HOST</code> at Wau and inspect every captured message in the browser. Production cutover is another one-line edit &mdash; Wau is not in the production wire path.
+                </p>
+                <div class="mt-6 flex items-center gap-2 text-sm text-zinc-500 dark:text-zinc-500">
+                    <Icon name="terminal" class="h-4 w-4" />
+                    <span>Zero SDK install. Standard SMTP wire.</span>
+                </div>
+            </div>
+
+            <div class="lg:col-span-3" id="code-sample">
+                <div class="overflow-hidden rounded-xl border border-zinc-200 bg-zinc-950 shadow-2xl shadow-amber-500/5 dark:border-white/10">
+                    {/* Tabs */}
+                    <div class="flex items-center justify-between border-b border-white/10 bg-zinc-900/50 px-4">
+                        <div class="flex items-center">
+                            <button data-tab="env" class="cursor-pointer border-b-2 border-amber-500 px-3 py-3 font-mono text-xs uppercase tracking-wider text-amber-400 transition">.env</button>
+                            <button data-tab="php" class="cursor-pointer border-b-2 border-transparent px-3 py-3 font-mono text-xs uppercase tracking-wider text-zinc-500 transition hover:text-zinc-300">PHP SDK</button>
+                            <button data-tab="curl" class="cursor-pointer border-b-2 border-transparent px-3 py-3 font-mono text-xs uppercase tracking-wider text-zinc-500 transition hover:text-zinc-300">curl</button>
+                        </div>
+                        <div class="flex items-center gap-1.5">
+                            <span class="h-2.5 w-2.5 rounded-full bg-zinc-700"></span>
+                            <span class="h-2.5 w-2.5 rounded-full bg-zinc-700"></span>
+                            <span class="h-2.5 w-2.5 rounded-full bg-zinc-700"></span>
+                        </div>
+                    </div>
+                    {/* Code panes */}
+                    <div class="overflow-x-auto p-5 font-mono text-[13px] leading-relaxed text-zinc-300">
+<pre data-pane="env"><span class="text-zinc-500"># Drop in &mdash; paste these into your app's .env</span>
+<span class="text-amber-400">MAIL_MAILER</span>=smtp
+<span class="text-amber-400">MAIL_HOST</span>=<span class="text-emerald-400">sandbox.waumail.my</span>
+<span class="text-amber-400">MAIL_PORT</span>=<span class="text-emerald-400">587</span>
+<span class="text-amber-400">MAIL_USERNAME</span>=<span class="text-emerald-400">wau-abc123</span>
+<span class="text-amber-400">MAIL_PASSWORD</span>=<span class="text-emerald-400">secret</span>
+<span class="text-amber-400">MAIL_ENCRYPTION</span>=<span class="text-emerald-400">tls</span>
+
+<span class="text-zinc-500"># Or one-line DSN</span>
+<span class="text-amber-400">MAIL_URL</span>=<span class="text-emerald-400">smtp://wau-abc123:secret@sandbox.waumail.my:587?encryption=tls</span></pre>
+<pre data-pane="php" hidden><span class="text-zinc-500">// Standard Laravel mail — nothing Wau-specific in your code.</span>
+<span class="text-zinc-500">// Wau is just the SMTP server your MAIL_HOST points at.</span>
+
+<span class="text-sky-400">use</span> <span class="text-amber-400">Illuminate\Support\Facades\Mail</span>;
+
+<span class="text-amber-400">Mail</span>::raw(<span class="text-emerald-400">'Hello from my app'</span>, <span class="text-sky-400">function</span> (<span class="text-sky-400">$message</span>) &lbrace;
+    <span class="text-sky-400">$message</span>-&gt;to(<span class="text-emerald-400">'user@example.com'</span>)
+        -&gt;subject(<span class="text-emerald-400">'Welcome'</span>);
+&rbrace;);
+
+<span class="text-zinc-500">// Anything that ships with your framework works the same way —</span>
+<span class="text-zinc-500">// Mailable classes, Notification mail channel, queued jobs, etc.</span></pre>
+<pre data-pane="curl" hidden><span class="text-zinc-500"># Inspect captured mail straight from the REST API</span>
+<span class="text-amber-400">curl</span> https://console.waumail.my/api/sandboxes/<span class="text-amber-400">$INBOX</span>/messages \
+  -H <span class="text-emerald-400">"Authorization: Bearer $WAU_TOKEN"</span>
+
+<span class="text-zinc-500"># Send into the sandbox over HTTP</span>
+<span class="text-amber-400">curl</span> -X POST https://console.waumail.my/api/send/<span class="text-amber-400">$INBOX</span> \
+  -H <span class="text-emerald-400">"Authorization: Bearer $WAU_TOKEN"</span> \
+  -H <span class="text-emerald-400">"Content-Type: application/json"</span> \
+  -d <span class="text-emerald-400">'&lbrace;
+    "from":    &lbrace; "email": "hello@yourapp.test", "name": "Your App" &rbrace;,
+    "to":      [&lbrace; "email": "user@example.com" &rbrace;],
+    "subject": "Welcome to Wau",
+    "text":    "Captured. Never delivered."
+  &rbrace;'</span></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    const root = document.getElementById('code-sample')!;
+    const tabs = root.querySelectorAll<HTMLButtonElement>('[data-tab]');
+    const panes = root.querySelectorAll<HTMLPreElement>('[data-pane]');
+
+    const ACTIVE = ['border-amber-500', 'text-amber-400'];
+    const INACTIVE = ['border-transparent', 'text-zinc-500', 'hover:text-zinc-300'];
+
+    tabs.forEach((tab) => {
+        tab.addEventListener('click', () => {
+            tabs.forEach((t) => {
+                const isActive = t === tab;
+                t.classList.remove(...(isActive ? INACTIVE : ACTIVE));
+                t.classList.add(...(isActive ? ACTIVE : INACTIVE));
+            });
+            panes.forEach((pane) => {
+                pane.hidden = pane.dataset.pane !== tab.dataset.tab;
+            });
+        });
+    });
+</script>

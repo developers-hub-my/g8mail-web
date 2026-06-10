@@ -1,0 +1,8 @@
+<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <g transform="rotate(90 24 24)">
+    <path d="M24 4 C 40 16, 40 32, 24 44 C 8 32, 8 16, 24 4 Z" stroke="#f59e0b" stroke-width="2.5" stroke-linejoin="round" fill="#f59e0b" fill-opacity="0.12"/>
+    <line x1="10" y1="24" x2="38" y2="24" stroke="#f59e0b" stroke-width="2" stroke-linecap="round"/>
+    <circle cx="24" cy="24" r="3" fill="#f59e0b"/>
+  </g>
+  <path d="M 10 36 Q 24 47, 38 36" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" fill="none"/>
+</svg>

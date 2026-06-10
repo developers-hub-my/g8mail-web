@@ -1,0 +1,62 @@
+---
+import Icon from './Icon.astro';
+
+const features = [
+    {
+        icon: 'inbox',
+        title: 'SMTP catcher',
+        body: 'Postfix-backed inbound, SASL AUTH on port 587. Point any client at Wau — standard SMTP, no SDK required.',
+    },
+    {
+        icon: 'eye',
+        title: 'Full inspector',
+        body: 'HTML, text, raw <code class="font-mono text-xs">.eml</code>, headers, attachments. Render HTML safely in a sandboxed iframe.',
+    },
+    {
+        icon: 'arrow-right-left',
+        title: 'Open REST API',
+        body: 'A documented HTTP API for listing inboxes, fetching messages, and sending into the sandbox. Use it from any language — no Wau-specific SDK required.',
+    },
+    {
+        icon: 'layout-grid',
+        title: 'Workspaces & RBAC',
+        body: 'Solo, team, or shared classroom — workspaces, projects, and Owner / Admin / Member / Viewer roles out of the box.',
+    },
+    {
+        icon: 'shield',
+        title: 'Optional spam scoring',
+        body: 'Wire in SpamAssassin to score captured messages, surface dangerous content, and flag deliverability gotchas.',
+    },
+    {
+        icon: 'zap',
+        title: 'Webhooks for CI',
+        body: 'Get a signed HTTP callback every time mail arrives. End-to-end test your verification-email flow without manual checks.',
+    },
+] as const;
+---
+
+<section id="features" class="border-t border-zinc-200 py-20 sm:py-28 dark:border-white/5">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div class="max-w-2xl">
+            <p class="text-sm font-medium uppercase tracking-wider text-amber-600 dark:text-amber-500">Features</p>
+            <h2 class="mt-3 text-3xl font-semibold tracking-tight text-zinc-900 sm:text-4xl dark:text-white">
+                Everything you need to test outbound mail.
+            </h2>
+            <p class="mt-4 text-lg text-zinc-600 dark:text-zinc-400">
+                Wau accepts every message your app sends, parses it, and shows it to you in a clean inspector. Built for solo developers, teams, and shared labs.
+            </p>
+        </div>
+
+        <div class="mt-14 grid gap-px overflow-hidden rounded-2xl border border-zinc-200 bg-zinc-200 sm:grid-cols-2 lg:grid-cols-3 dark:border-white/10 dark:bg-white/10">
+            {
+                features.map((feature) => (
+                    <div class="bg-white p-7 dark:bg-[#0B1120]">
+                        <Icon name={feature.icon} class="h-5 w-5 text-amber-500" />
+                        <h3 class="mt-4 font-semibold text-zinc-900 dark:text-white">{feature.title}</h3>
+                        <p class="mt-2 text-sm text-zinc-600 dark:text-zinc-400" set:html={feature.body} />
+                    </div>
+                ))
+            }
+        </div>
+    </div>
+</section>

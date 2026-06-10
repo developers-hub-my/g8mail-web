@@ -1,0 +1,124 @@
+---
+import Icon from './Icon.astro';
+import { CONSOLE_URL } from '../consts';
+---
+
+<section class="relative overflow-hidden pt-32 pb-20 sm:pt-40 sm:pb-28">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div class="grid items-center gap-12 lg:grid-cols-2">
+            <div>
+                {/* Badge */}
+                <div class="mb-6 inline-flex items-center gap-2 rounded-full border border-zinc-200 bg-zinc-50 px-3 py-1 dark:border-white/10 dark:bg-white/[0.03]">
+                    <span class="inline-block h-1.5 w-1.5 rounded-full bg-amber-500"></span>
+                    <span class="text-xs font-medium text-zinc-700 dark:text-zinc-300">Wau by G8Suite &middot; Developer email sandbox</span>
+                </div>
+
+                <h1 class="text-4xl font-semibold tracking-tight text-zinc-900 sm:text-5xl lg:text-6xl dark:text-white">
+                    Catch dev emails.
+                    <br />
+                    <span class="text-amber-500">Inspect everything.</span>
+                    <br />
+                    Never deliver.
+                </h1>
+
+                <p class="mt-6 max-w-xl text-lg leading-relaxed text-zinc-600 dark:text-zinc-400">
+                    Wau is an SMTP server that captures every email your app sends during
+                    development. Inspect HTML, text, raw source, headers and attachments &mdash; nothing
+                    ever leaves the box. Fully managed in the cloud, ready in minutes.
+                </p>
+
+                <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+                    <a href={`${CONSOLE_URL}/register`} class="inline-flex items-center justify-center gap-2 rounded-md bg-amber-500 px-6 py-3 text-base font-medium text-zinc-950 shadow-sm transition hover:bg-amber-400">
+                        Try Cloud free
+                        <Icon name="arrow-right" class="h-4 w-4" />
+                    </a>
+                    <a href={`${CONSOLE_URL}/docs`} class="inline-flex items-center justify-center gap-2 rounded-md border border-zinc-300 bg-white px-6 py-3 text-base font-medium text-zinc-900 transition hover:bg-zinc-50 dark:border-white/10 dark:bg-white/[0.03] dark:text-white dark:hover:bg-white/[0.06]">
+                        Read the docs
+                    </a>
+                </div>
+
+                <div class="mt-10 flex flex-wrap items-center gap-x-6 gap-y-2 text-xs text-zinc-500 dark:text-zinc-500">
+                    <span class="inline-flex items-center gap-1.5"><Icon name="check" class="h-3.5 w-3.5 text-amber-500" /> Free plan available</span>
+                    <span class="inline-flex items-center gap-1.5"><Icon name="check" class="h-3.5 w-3.5 text-amber-500" /> Standard SMTP</span>
+                    <span class="inline-flex items-center gap-1.5"><Icon name="check" class="h-3.5 w-3.5 text-amber-500" /> No SDK lock-in</span>
+                </div>
+            </div>
+
+            {/* Hero visual: a stylised captured-email card — shows what the product does in miniature. */}
+            <div class="relative hidden lg:block">
+                <div class="relative mx-auto w-full max-w-lg">
+                    {/* Soft amber halo behind the card */}
+                    <div class="absolute -inset-8 -z-10 rounded-3xl bg-amber-500/10 blur-3xl dark:bg-amber-500/[0.08]"></div>
+
+                    {/* Captured email card */}
+                    <div class="overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-2xl shadow-amber-500/5 dark:border-white/10 dark:bg-zinc-900/80 dark:shadow-amber-500/10">
+                        {/* Window chrome */}
+                        <div class="flex items-center justify-between border-b border-zinc-200 bg-zinc-50 px-4 py-2.5 dark:border-white/10 dark:bg-white/[0.03]">
+                            <div class="flex items-center gap-1.5">
+                                <span class="h-2.5 w-2.5 rounded-full bg-zinc-300 dark:bg-white/15"></span>
+                                <span class="h-2.5 w-2.5 rounded-full bg-zinc-300 dark:bg-white/15"></span>
+                                <span class="h-2.5 w-2.5 rounded-full bg-zinc-300 dark:bg-white/15"></span>
+                            </div>
+                            <span class="inline-flex items-center gap-1.5 rounded-full bg-amber-500/15 px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-wider text-amber-700 ring-1 ring-amber-500/30 dark:text-amber-300">
+                                <span class="h-1.5 w-1.5 animate-pulse rounded-full bg-amber-500"></span>
+                                captured
+                            </span>
+                        </div>
+
+                        {/* Headers */}
+                        <div class="space-y-1.5 border-b border-zinc-200 px-5 py-4 font-mono text-xs dark:border-white/5">
+                            <div class="flex gap-3">
+                                <span class="w-12 shrink-0 uppercase tracking-wider text-zinc-400 dark:text-zinc-600">from</span>
+                                <span class="text-zinc-700 dark:text-zinc-300">app@acme.test</span>
+                            </div>
+                            <div class="flex gap-3">
+                                <span class="w-12 shrink-0 uppercase tracking-wider text-zinc-400 dark:text-zinc-600">to</span>
+                                <span class="text-zinc-700 dark:text-zinc-300">wau-abc123<span class="text-zinc-400 dark:text-zinc-600">@inbox.waumail.my</span></span>
+                            </div>
+                        </div>
+
+                        {/* Subject + preview */}
+                        <div class="px-5 py-4">
+                            <p class="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
+                                Order #4821 confirmation
+                            </p>
+                            <p class="mt-1.5 text-xs leading-relaxed text-zinc-500 dark:text-zinc-400">
+                                Hi Sarah, your order has shipped. Tracking number 1Z999AA10123456784 is on the way and should arrive&hellip;
+                            </p>
+                        </div>
+
+                        {/* Tab strip */}
+                        <div class="flex items-center gap-1 border-t border-zinc-200 bg-zinc-50/60 px-3 py-2 font-mono text-[10px] uppercase tracking-wider dark:border-white/5 dark:bg-white/[0.02]">
+                            <span class="rounded px-2 py-1 text-amber-700 ring-1 ring-inset ring-amber-500/30 dark:bg-amber-500/10 dark:text-amber-300">html</span>
+                            <span class="rounded px-2 py-1 text-zinc-500 dark:text-zinc-500">text</span>
+                            <span class="rounded px-2 py-1 text-zinc-500 dark:text-zinc-500">headers</span>
+                            <span class="rounded px-2 py-1 text-zinc-500 dark:text-zinc-500">raw</span>
+                            <span class="rounded px-2 py-1 text-zinc-500 dark:text-zinc-500">attachments</span>
+                        </div>
+
+                        {/* Footer badges */}
+                        <div class="flex flex-wrap items-center gap-2 border-t border-zinc-200 px-5 py-3 text-[11px] dark:border-white/5">
+                            <span class="inline-flex items-center gap-1 font-mono text-emerald-700 dark:text-emerald-400">
+                                <Icon name="check" class="h-3 w-3" /> spf
+                            </span>
+                            <span class="inline-flex items-center gap-1 font-mono text-emerald-700 dark:text-emerald-400">
+                                <Icon name="check" class="h-3 w-3" /> dkim
+                            </span>
+                            <span class="text-zinc-300 dark:text-zinc-700">&middot;</span>
+                            <span class="rounded-full bg-zinc-100 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-zinc-600 dark:bg-white/[0.04] dark:text-zinc-400">staging</span>
+                            <span class="rounded-full bg-zinc-100 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-zinc-600 dark:bg-white/[0.04] dark:text-zinc-400">order</span>
+                        </div>
+                    </div>
+
+                    {/* Floating ghost card behind */}
+                    <div class="absolute -bottom-6 -right-6 -z-10 hidden h-32 w-full rounded-xl border border-zinc-200/50 bg-white/40 backdrop-blur xl:block dark:border-white/5 dark:bg-zinc-900/40"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {/* Background glow */}
+    <div class="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+        <div class="absolute right-1/4 top-1/4 h-[500px] w-[500px] rounded-full bg-amber-500/10 blur-3xl dark:bg-amber-500/[0.07]"></div>
+    </div>
+</section>

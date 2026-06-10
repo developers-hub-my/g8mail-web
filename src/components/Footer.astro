@@ -1,0 +1,29 @@
+---
+import WauMark from './WauMark.astro';
+import { CONSOLE_URL, CONTACT_EMAIL } from '../consts';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="border-t border-zinc-200 py-12 dark:border-white/5">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div class="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
+            <div class="flex items-center gap-2.5">
+                <WauMark class="h-7 w-7 text-amber-500" />
+                <div class="text-sm">
+                    <span class="font-semibold text-zinc-900 dark:text-white">Wau</span>
+                    <span class="text-zinc-500 dark:text-zinc-500"> by <a href="https://g8suite.com" class="transition hover:text-zinc-900 dark:hover:text-white">G8Suite</a></span>
+                </div>
+            </div>
+            <div class="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm">
+                <a href={`${CONSOLE_URL}/docs`} class="text-zinc-600 transition hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white">Docs</a>
+                <a href={`${CONSOLE_URL}/changelog`} class="text-zinc-600 transition hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white">Changelog</a>
+                <a href="https://g8suite.com" class="text-zinc-600 transition hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white">G8Suite</a>
+                <a href={`mailto:${CONTACT_EMAIL}`} class="text-zinc-600 transition hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white">Contact</a>
+            </div>
+            <p class="text-xs text-zinc-500 dark:text-zinc-500">
+                &copy; {year} <a href="https://devhub.my" class="transition hover:text-zinc-700 dark:hover:text-zinc-300">Developers Hub Sdn Bhd</a>.
+            </p>
+        </div>
+    </div>
+</footer>

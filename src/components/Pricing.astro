@@ -1,0 +1,184 @@
+---
+import Icon from './Icon.astro';
+import { CONSOLE_URL, CONTACT_EMAIL } from '../consts';
+
+interface Plan {
+    name: string;
+    tagline: string;
+    monthly: string;
+    annual: string;
+    monthlyNote: string;
+    annualNote: string;
+    cta: { label: string; href: string; primary?: boolean };
+    features: string[];
+    popular?: boolean;
+}
+
+const plans: Plan[] = [
+    {
+        name: 'Free',
+        tagline: 'Try Wau Cloud, no card needed.',
+        monthly: 'RM 0',
+        annual: 'RM 0',
+        monthlyNote: '/forever',
+        annualNote: '/forever',
+        cta: { label: 'Start free', href: `${CONSOLE_URL}/register` },
+        features: [
+            '1 sandbox · 3 inboxes',
+            '500 captured messages / mo',
+            '7-day retention',
+            '1 workspace member',
+            'Community support',
+        ],
+    },
+    {
+        name: 'Solo',
+        tagline: 'Solo dev, side projects, freelancers.',
+        monthly: 'RM 19',
+        annual: 'RM 190',
+        monthlyNote: 'or RM 190/yr (2 months free)',
+        annualNote: 'RM 15.83/mo equivalent',
+        cta: { label: 'Start 14-day trial', href: `${CONSOLE_URL}/register`, primary: true },
+        popular: true,
+        features: [
+            '1 sandbox · 10 inboxes',
+            '5,000 messages / mo',
+            '30-day retention',
+            '1 workspace member',
+            'CI webhooks',
+            'Email support',
+        ],
+    },
+    {
+        name: 'Team',
+        tagline: 'Small dev teams shipping weekly.',
+        monthly: 'RM 49',
+        annual: 'RM 490',
+        monthlyNote: 'or RM 490/yr (2 months free)',
+        annualNote: 'RM 40.83/mo equivalent',
+        cta: { label: 'Start 14-day trial', href: `${CONSOLE_URL}/register` },
+        features: [
+            'Everything in Solo',
+            '3 sandboxes · 25 inboxes each',
+            '25,000 messages / mo',
+            '90-day retention',
+            'Up to 5 members',
+            'Audit log export',
+            'Priority email (1-day)',
+        ],
+    },
+    {
+        name: 'Business',
+        tagline: 'Agencies and enterprise.',
+        monthly: 'RM 149',
+        annual: 'RM 1,490',
+        monthlyNote: 'or RM 1,490/yr (2 months free)',
+        annualNote: 'RM 124.17/mo equivalent',
+        cta: { label: 'Talk to sales', href: `mailto:${CONTACT_EMAIL}?subject=Wau%20Cloud%20Business` },
+        features: [
+            'Everything in Team',
+            '<strong>Unlimited</strong> sandboxes & inboxes',
+            '<strong>Unlimited</strong> messages',
+            '1-year retention',
+            '<strong>Unlimited</strong> members',
+            'SAML SSO',
+            '99.5% uptime SLA',
+            'Dedicated contact',
+        ],
+    },
+];
+---
+
+<section id="pricing" class="border-t border-zinc-200 py-20 sm:py-28 dark:border-white/5">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div class="text-center">
+            <p class="text-sm font-medium uppercase tracking-wider text-amber-600 dark:text-amber-500">Pricing</p>
+            <h2 class="mt-3 text-3xl font-semibold tracking-tight text-zinc-900 sm:text-4xl dark:text-white">
+                Simple plans. We run everything.
+            </h2>
+            <p class="mx-auto mt-4 max-w-xl text-zinc-600 dark:text-zinc-400">
+                Managed hosting, backups, uptime SLAs &mdash; ringgit-priced, billed via BayarCash. Start free, upgrade when you outgrow it.
+            </p>
+
+            {/* Monthly / Annual toggle */}
+            <div class="mx-auto mt-8 inline-flex items-center gap-3 rounded-full border border-zinc-200 bg-white p-1 dark:border-white/10 dark:bg-white/[0.03]" id="billing-toggle">
+                <button data-billing="monthly" class="cursor-pointer rounded-full bg-amber-500 px-4 py-1.5 text-xs font-semibold text-zinc-950 transition">Monthly</button>
+                <button data-billing="annual" class="cursor-pointer rounded-full px-4 py-1.5 text-xs font-semibold text-zinc-500 transition">
+                    Annual <span class="ml-1 rounded bg-zinc-950/10 px-1 py-0.5 font-mono text-[9px] uppercase">2 months free</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="mt-12 grid gap-6 lg:grid-cols-4">
+            {
+                plans.map((plan) => (
+                    <div
+                        class={plan.popular
+                            ? 'relative rounded-2xl border-2 border-amber-500 bg-white p-6 shadow-xl shadow-amber-500/10 dark:bg-white/[0.04]'
+                            : 'rounded-2xl border border-zinc-200 bg-white p-6 dark:border-white/10 dark:bg-white/[0.02]'}
+                    >
+                        {plan.popular && (
+                            <span class="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-amber-500 px-3 py-1 text-xs font-semibold text-zinc-950">Most popular</span>
+                        )}
+                        <h3 class="font-semibold text-zinc-900 dark:text-white">{plan.name}</h3>
+                        <p class="mt-1 text-xs text-zinc-600 dark:text-zinc-400">{plan.tagline}</p>
+                        <div class="mt-5 flex items-baseline gap-1">
+                            <span class="text-4xl font-semibold tracking-tight text-zinc-900 dark:text-white" data-price data-monthly={plan.monthly} data-annual={plan.annual}>{plan.monthly}</span>
+                            <span class="text-xs text-zinc-500" data-period data-monthly="/mo" data-annual="/yr">{plan.monthlyNote === '/forever' ? '/forever' : '/mo'}</span>
+                        </div>
+                        {plan.monthlyNote !== '/forever' && (
+                            <p class="mt-1 font-mono text-[10px] text-zinc-500" data-note data-monthly={plan.monthlyNote} data-annual={plan.annualNote}>{plan.monthlyNote}</p>
+                        )}
+                        <a
+                            href={plan.cta.href}
+                            class={plan.cta.primary
+                                ? 'mt-4 inline-flex w-full items-center justify-center rounded-md bg-amber-500 px-3 py-2 text-sm font-semibold text-zinc-950 shadow-sm transition hover:bg-amber-400'
+                                : 'mt-5 inline-flex w-full items-center justify-center rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm font-medium text-zinc-900 transition hover:bg-zinc-50 dark:border-white/10 dark:bg-white/[0.03] dark:text-white dark:hover:bg-white/[0.06]'}
+                        >
+                            {plan.cta.label}
+                        </a>
+                        <ul class="mt-5 space-y-2 text-xs text-zinc-700 dark:text-zinc-300">
+                            {plan.features.map((feature) => (
+                                <li class="flex gap-2">
+                                    <Icon name="check" class="mt-0.5 h-3.5 w-3.5 flex-shrink-0 text-amber-500" />
+                                    <span set:html={feature} />
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                ))
+            }
+        </div>
+
+        <p class="mt-8 text-center text-xs text-zinc-500">
+            Cloud billed via BayarCash (FPX direct debit, credit / debit card, e-wallets). MYR pricing, no FX surprises. Cancel anytime &mdash; you keep your data export for 30 days.
+        </p>
+    </div>
+</section>
+
+<script>
+    const toggle = document.getElementById('billing-toggle')!;
+    const buttons = toggle.querySelectorAll<HTMLButtonElement>('[data-billing]');
+    const swaps = document.querySelectorAll<HTMLElement>('[data-price], [data-period], [data-note]');
+
+    const ACTIVE = ['bg-amber-500', 'text-zinc-950'];
+    const INACTIVE = ['text-zinc-500'];
+
+    buttons.forEach((button) => {
+        button.addEventListener('click', () => {
+            const billing = button.dataset.billing as 'monthly' | 'annual';
+            buttons.forEach((b) => {
+                const isActive = b === button;
+                b.classList.remove(...(isActive ? INACTIVE : ACTIVE));
+                b.classList.add(...(isActive ? ACTIVE : INACTIVE));
+            });
+            swaps.forEach((el) => {
+                // The Free plan keeps "/forever" — skip elements without a swap value.
+                const value = el.dataset[billing];
+                if (value && el.textContent !== '/forever') {
+                    el.textContent = value;
+                }
+            });
+        });
+    });
+</script>
