@@ -50,9 +50,21 @@ const mcpJson = `{
                 <a href={registerUrl('docs-step')}>Create an account at console.waumail.my</a>. A personal workspace and your first inbox are created for
                 you. The Free plan needs no card.
             </p>
+            <figure class="shot">
+                <a href="/screenshots/register.png"><img src="/screenshots/register.png" width="1440" height="900" loading="lazy" decoding="async" alt="Wau console sign-up form with name, email address and password fields." /></a>
+                <figcaption>Sign up at console.waumail.my.</figcaption>
+            </figure>
 
             <h2 id="smtp">2. Point your app at Wau</h2>
-            <p>Open the inbox and choose <strong>SMTP settings</strong>. Copy the values into your app's environment:</p>
+            <p>Open the inbox and choose <strong>SMTP</strong>. Copy the values into your app's environment:</p>
+            <figure class="shot">
+                <a href="/screenshots/inbox.png"><img src="/screenshots/inbox.png" width="1440" height="900" loading="lazy" decoding="async" alt="Wau console showing the inbox list, the messages in the selected inbox and the SMTP button." /></a>
+                <figcaption>Your inboxes, grouped by status. The <strong>SMTP</strong> button opens the inbox settings.</figcaption>
+            </figure>
+            <figure class="shot">
+                <a href="/screenshots/smtp-settings.png"><img src="/screenshots/smtp-settings.png" width="1440" height="900" loading="lazy" decoding="async" alt="SMTP settings panel listing host, port, username, password, auth and TLS, with a Laravel .env snippet." /></a>
+                <figcaption>Host, port, username and password for the inbox, with ready-to-paste snippets for Laravel, swaks, Node.js and Python.</figcaption>
+            </figure>
             <div class="code">
                 <div class="code-head"><span>.env</span><button class="btn" type="button" data-copy="env-snippet"><Icon name="copy" /><span data-label>Copy</span></button></div>
 <pre id="env-snippet" tabindex="0"><span class="k">MAIL_MAILER</span>=smtp
@@ -77,9 +89,25 @@ const mcpJson = `{
                 The message appears in the inbox within a few seconds. Open it to see the HTML, text, raw source, headers, attachments,
                 authentication results and spam score.
             </p>
+            <figure class="shot">
+                <a href="/screenshots/message.png"><img src="/screenshots/message.png" width="1440" height="900" loading="lazy" decoding="async" alt="A captured message open in the console, showing sender, recipient, authentication badges and the HTML preview." /></a>
+                <figcaption>A captured message: sender, recipient, SPF/DKIM/DMARC results and the rendered HTML.</figcaption>
+            </figure>
+            <figure class="shot">
+                <a href="/screenshots/message-headers.png"><img src="/screenshots/message-headers.png" width="1440" height="900" loading="lazy" decoding="async" alt="The Headers tab of a captured message." /></a>
+                <figcaption>The <strong>Headers</strong> tab lists every header the message arrived with.</figcaption>
+            </figure>
+            <figure class="shot">
+                <a href="/screenshots/message-spam.png"><img src="/screenshots/message-spam.png" width="1440" height="900" loading="lazy" decoding="async" alt="The Spam &amp; links tab showing a spam score of 1.4 out of 10 and a list of links." /></a>
+                <figcaption><strong>Spam &amp; links</strong> shows the spam score against the 5.0 threshold and every link in the message.</figcaption>
+            </figure>
 
             <h2 id="api">4. Read mail from tests with the REST API</h2>
             <p>Create a token under <strong>Settings → API tokens</strong>. Tokens start with <code>wau_</code> and are tied to one workspace.</p>
+            <figure class="shot">
+                <a href="/screenshots/api-tokens.png"><img src="/screenshots/api-tokens.png" width="1440" height="900" loading="lazy" decoding="async" alt="API tokens settings page with a create-token form, a token list and a curl example." /></a>
+                <figcaption>Create, review and revoke tokens. The full token is shown once, when it is created.</figcaption>
+            </figure>
             <div class="code">
                 <div class="code-head"><span>curl</span></div>
 <pre tabindex="0"><span class="k">curl</span> https://console.waumail.my/api/sandboxes \
@@ -97,14 +125,24 @@ const mcpJson = `{
 
             <h2 id="mcp">5. Optional: read mail from your coding agent</h2>
             <p>
-                Wau runs a read-only MCP server at <code>https://console.waumail.my/mcp/wau</code>. It uses the same API token. Add it to your
-                project's <code>.mcp.json</code>:
+                Wau runs an MCP server at <code>https://console.waumail.my/mcp/wau</code>. It uses the same API token and the same workspace
+                roles as the console: any member can list inboxes and read messages; members and above can create inboxes, send test
+                messages, forward and delete messages; clearing an inbox needs admin; editing, rotating credentials or deleting an inbox needs
+                owner. Add it to your project's <code>.mcp.json</code>:
             </p>
             <div class="code">
                 <div class="code-head"><span>.mcp.json</span></div>
                 <pre tabindex="0" set:html={mcpJson} />
             </div>
             <p>Then ask your agent things like "show the last password-reset email in shopfront-staging".</p>
+            <figure class="shot">
+                <a href="/screenshots/mcp.png"><img src="/screenshots/mcp.png" width="1440" height="900" loading="lazy" decoding="async" alt="MCP connection settings page showing the server address and the token picker." /></a>
+                <figcaption><strong>Settings → MCP connection</strong> shows the server address and which token to use.</figcaption>
+            </figure>
+            <figure class="shot">
+                <a href="/screenshots/mcp-config.png"><img src="/screenshots/mcp-config.png" width="1440" height="900" loading="lazy" decoding="async" alt="MCP connection page showing the .mcp.json snippet and a sample prompt." /></a>
+                <figcaption>Copy the <code>.mcp.json</code>, <code>claude mcp add</code> or shell snippet for your client.</figcaption>
+            </figure>
 
             <h2 id="production">6. Going to production</h2>
             <p>

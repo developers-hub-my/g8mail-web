@@ -22,3 +22,6 @@ table.data { margin: 12px 0; }
 .next a span { display: block; font-family: var(--font-mono); font-size: var(--text-xs); color: var(--subtle); }
 .next a:hover { border-color: var(--border-strong); }
 @media (max-width: 760px) { .docs { grid-template-columns: 1fr; gap: 24px; padding-top: 24px; } .docs-nav { position: static; display: flex; overflow-x: auto; } .docs-nav h2 { display: none; } .docs-nav a { white-space: nowrap; } .next { grid-template-columns: 1fr; } }
+.shot { margin: 20px 0 28px; }
+.shot img { display: block; width: 100%; height: auto; border: 1px solid var(--border); border-radius: var(--r-lg); background: var(--raised); }
+.shot figcaption { margin-top: 8px; font-size: var(--text-sm); color: var(--subtle); }
