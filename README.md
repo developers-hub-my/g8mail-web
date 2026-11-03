@@ -4,7 +4,7 @@ Marketing landing page for **Wau** — developer email sandbox by G8Suite (propr
 
 - **Site**: [waumail.my](https://waumail.my)
 - **App (console)**: [console.waumail.my](https://console.waumail.my)
-- **Stack**: [Astro](https://astro.build) + TailwindCSS v4, deployed on Netlify as a static site.
+- **Stack**: [Astro](https://astro.build) 7 with plain CSS (Node 24), deployed on Netlify as a static site.
 
 
 ## Development
