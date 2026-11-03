@@ -3,20 +3,49 @@ import '../styles/global.css';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import { SITE_URL } from '../consts';
+import { createHash } from 'node:crypto';
+import { organization, website } from '../seo';
 
 interface Props {
     title?: string;
     description?: string;
+    /** Absolute path under public/, 1200x630 PNG. */
+    image?: string;
+    imageAlt?: string;
+    noindex?: boolean;
+    /** Extra schema.org nodes added to the page's JSON-LD graph. */
+    schema?: object[];
     current?: 'home' | 'pricing' | 'docs';
 }
 
 const {
     title = 'Wau — Catch dev emails. Inspect everything. Never deliver.',
-    description = 'Wau is a hosted SMTP sandbox that captures every email your app sends in development, staging and UAT. Inspect HTML, text, raw source, headers and attachments. Nothing is delivered.',
+    description = 'Hosted SMTP sandbox for dev, staging and UAT. Wau captures every email your app sends so you can inspect HTML, headers and attachments. Nothing is delivered.',
+    image = '/og/default.png',
+    imageAlt = 'Wau: Catch dev emails. Inspect everything. Never deliver.',
+    noindex = false,
+    schema = [],
     current,
 } = Astro.props;
 
-const canonical = new URL(Astro.url.pathname, SITE_URL).href;
+// build.format 'file' renders /pricing.html and /index.html; the public URLs are /pricing and /.
+const canonical = new URL(Astro.url.pathname.replace(/(index)?\.html$/, ''), SITE_URL).href;
+const imageUrl = new URL(image, SITE_URL).href;
+// `<` escaped so JSON-LD text can never close the script element.
+const jsonLd = JSON.stringify({ '@context': 'https://schema.org', '@graph': [organization, website, ...schema] }).replace(/</g, '\\u003c');
+
+// Optional, set at build time. Unset renders nothing.
+const plausibleDomain = import.meta.env.PUBLIC_PLAUSIBLE_DOMAIN?.trim();
+if (plausibleDomain && !/^[a-z0-9.-]+(,[a-z0-9.-]+)*$/i.test(plausibleDomain)) throw new Error(`PUBLIC_PLAUSIBLE_DOMAIN is not a domain: ${plausibleDomain}`);
+const analyticsOrigin = plausibleDomain ? ' https://plausible.io' : '';
+
+// Applies a pinned theme before first paint; no value means follow the system ("auto").
+// It is inline so it runs before CSS paints, so its hash goes into the page's CSP.
+const themeScript = "try { var t = localStorage.getItem('wau-theme'); if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t; } catch (e) {}";
+Astro.csp?.insertScriptHash(`sha256-${createHash('sha256').update(themeScript).digest('base64')}`);
+Astro.csp?.insertDirective(`connect-src 'self'${analyticsOrigin}`);
+// Inserting a resource replaces the default 'self', so add it back alongside the analytics origin.
+if (analyticsOrigin) ["'self'", analyticsOrigin.trim()].forEach((r) => Astro.csp?.insertScriptResource(r));
 ---
 
 <!doctype html>
@@ -26,24 +55,39 @@ const canonical = new URL(Astro.url.pathname, SITE_URL).href;
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>{title}</title>
         <meta name="description" content={description} />
-        <link rel="canonical" href={canonical} />
+        <meta name="robots" content={noindex ? 'noindex, follow' : 'index, follow, max-image-preview:large'} />
+        {!noindex && <link rel="canonical" href={canonical} />}
+        <link rel="icon" href="/favicon.ico" sizes="32x32" />
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        <link rel="manifest" href="/site.webmanifest" />
+        <link rel="sitemap" href="/sitemap-index.xml" />
         <meta name="generator" content={Astro.generator} />
         <meta name="color-scheme" content="light dark" />
+        <meta name="theme-color" media="(prefers-color-scheme: light)" content="#FAF8F3" />
+        <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0B1120" />
 
         <meta property="og:type" content="website" />
         <meta property="og:url" content={canonical} />
         <meta property="og:title" content={title} />
         <meta property="og:description" content={description} />
         <meta property="og:site_name" content="Wau" />
-        <meta name="twitter:card" content="summary" />
+        <meta property="og:locale" content="en_MY" />
+        <meta property="og:image" content={imageUrl} />
+        <meta property="og:image:type" content="image/png" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:image:alt" content={imageAlt} />
+        <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={title} />
         <meta name="twitter:description" content={description} />
+        <meta name="twitter:image" content={imageUrl} />
+        <meta name="twitter:image:alt" content={imageAlt} />
 
-        {/* Apply a pinned theme before first paint; no value means follow the system ("auto"). */}
-        <script is:inline>
-            try { var t = localStorage.getItem('wau-theme'); if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t; } catch (e) {}
-        </script>
+        <script type="application/ld+json" set:html={jsonLd} />
+        {plausibleDomain && <script is:inline defer data-domain={plausibleDomain} src="https://plausible.io/js/script.js" />}
+
+        <script is:inline set:html={themeScript} />
 
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

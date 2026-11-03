@@ -1,0 +1,29 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+import { registerUrl } from '../consts';
+---
+
+<BaseLayout title="Page not found — Wau" description="This page does not exist on waumail.my." noindex>
+    <main id="main" class="wrap not-found">
+        <p class="label-mono">404 · not captured</p>
+        <h1 class="h-2">This page never arrived.</h1>
+        <p class="lede">The address may be mistyped, or the page has moved. Everything on the site is one of these:</p>
+        <ul>
+            <li><a href="/">Home: what Wau does</a></li>
+            <li><a href="/pricing">Pricing: plans in ringgit</a></li>
+            <li><a href="/docs">Docs: capture your first email</a></li>
+        </ul>
+        <div class="not-found-actions">
+            <a class="btn btn-primary btn-lg" href="/">Back to the home page <Icon name="arrow-right" /></a>
+            <a class="btn btn-lg" href={registerUrl('404')}>Create a free account</a>
+        </div>
+    </main>
+</BaseLayout>
+
+<style>
+    .not-found { padding-block: var(--s-24); display: grid; gap: var(--s-5); justify-items: start; }
+    .not-found ul { margin: 0; padding-left: 1.25em; display: grid; gap: var(--s-2); }
+    .not-found a:not(.btn) { color: var(--accent-text); }
+    .not-found-actions { display: flex; flex-wrap: wrap; gap: var(--s-3); margin-top: var(--s-2); }
+</style>

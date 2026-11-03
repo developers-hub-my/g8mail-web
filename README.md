@@ -16,6 +16,26 @@ npm run build     # static output in dist/
 npm run preview   # preview the production build
 ```
 
+## SEO, social cards and analytics
+
+| What | Where |
+|---|---|
+| Per-page title, description, canonical, Open Graph / Twitter image, `noindex` | Props on `BaseLayout` (`title`, `description`, `image`, `imageAlt`, `noindex`, `schema`) |
+| JSON-LD (Organization, WebSite, SoftwareApplication from `PLANS`, FAQPage) | `src/seo.ts` |
+| Sitemap | `@astrojs/sitemap` → `/sitemap-index.xml`; `public/robots.txt` points at it |
+| OG images (1200×630), app icons, `favicon.ico` | Committed in `public/`; sources in `brand/`. Regenerate with `npm run brand-assets` (needs `rsvg-convert` and ImageMagick; downloads IBM Plex into `node_modules/.cache`) |
+| CSP | `<meta>` written by Astro (`security.csp` in `astro.config.mjs`); the theme script's hash is added in `BaseLayout`. Other headers in `netlify.toml` |
+| Post-build check | `npm run build && npm run check:seo` |
+
+Sign-up links use `registerUrl('<placement>')` from `src/consts.ts`, which adds
+`utm_source=waumail.my&utm_medium=website&utm_campaign=site&utm_content=<placement>`.
+
+### Analytics (optional)
+
+Set `PUBLIC_PLAUSIBLE_DOMAIN` (for example `waumail.my`) in Netlify → Site configuration →
+Environment variables, then redeploy. The Plausible script and its CSP origin are added only
+when it is set; unset renders nothing. Google Analytics is not wired in.
+
 ## Deploying to Netlify
 
 `netlify.toml` is already configured (`npm run build` → publish `dist/`).
@@ -34,7 +54,8 @@ unless the visitor pins one). Plan limits in `src/consts.ts` mirror
 
 ```text
 src/
-├── consts.ts               # Site / console URLs, PLANS (from PlanSeeder)
+├── consts.ts               # Site / console URLs, registerUrl(), PLANS (from PlanSeeder)
+├── seo.ts                  # JSON-LD nodes
 ├── layouts/
 │   └── BaseLayout.astro     # <head>, SEO meta, fonts, theme, header/footer, shared JS
 ├── components/
@@ -49,5 +70,6 @@ src/
 └── pages/
     ├── index.astro          # Home
     ├── pricing.astro        # Plans, compare table, billing notes
-    └── docs.astro           # Public getting-started guide
+    ├── docs.astro           # Public getting-started guide
+    └── 404.astro            # Not found (noindex)
 ```

@@ -1,7 +1,8 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Icon from '../components/Icon.astro';
-import { CONSOLE_URL, PLANS, rm, count } from '../consts';
+import { registerUrl, PLANS, rm, count } from '../consts';
+import { softwareApplication } from '../seo';
 import '../styles/pricing.css';
 
 const features = (p: (typeof PLANS)[number]) =>
@@ -29,8 +30,11 @@ const rows: [string, (p: (typeof PLANS)[number]) => string][] = [
 ---
 
 <BaseLayout
-    title="Pricing — Wau"
+    title="Pricing — Wau developer email sandbox, in ringgit"
     description="Flat Wau plans per workspace, in ringgit. Free, Solo, Team and Business, with a 14-day trial on paid plans."
+    image="/og/pricing.png"
+    imageAlt="Wau pricing: flat plans per workspace, in ringgit."
+    schema={[softwareApplication]}
     current="pricing"
 >
     <main id="main" class="wrap">
@@ -78,7 +82,11 @@ const rows: [string, (p: (typeof PLANS)[number]) => string][] = [
                                     <p class="price-note">&nbsp;</p>
                                 </>
                             )}
-                            <a class:list={['btn', { 'btn-primary': rec }]} href={`${CONSOLE_URL}/register`}>
+                            <a
+                                class:list={['btn', { 'btn-primary': rec }]}
+                                href={registerUrl(`pricing-${p.name.toLowerCase()}`)}
+                                aria-label={`${paid ? 'Start 14-day trial' : 'Start free'} on the ${p.name} plan`}
+                            >
                                 {paid ? 'Start 14-day trial' : 'Start free'}
                             </a>
                             <ul>

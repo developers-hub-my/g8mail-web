@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#0B1120"/>
+  <g transform="translate(760 90) scale(10)" opacity="0.10">
+  <g transform="rotate(90 24 24)">
+    <path d="M24 4 C 40 16, 40 32, 24 44 C 8 32, 8 16, 24 4 Z" stroke="#F5A524" stroke-width="2.5" stroke-linejoin="round" fill="#F5A524" fill-opacity="0.5"/>
+    <line x1="10" y1="24" x2="38" y2="24" stroke="#F5A524" stroke-width="2" stroke-linecap="round"/>
+    <circle cx="24" cy="24" r="3" fill="#F5A524"/>
+  </g>
+  <path d="M 10 36 Q 24 47, 38 36" stroke="#F5A524" stroke-width="2" stroke-linecap="round" fill="none"/></g>
+  <g transform="translate(80 64) scale(1.25)">
+  <g transform="rotate(90 24 24)">
+    <path d="M24 4 C 40 16, 40 32, 24 44 C 8 32, 8 16, 24 4 Z" stroke="#F5A524" stroke-width="2.5" stroke-linejoin="round" fill="#F5A524" fill-opacity="0.14"/>
+    <line x1="10" y1="24" x2="38" y2="24" stroke="#F5A524" stroke-width="2" stroke-linecap="round"/>
+    <circle cx="24" cy="24" r="3" fill="#F5A524"/>
+  </g>
+  <path d="M 10 36 Q 24 47, 38 36" stroke="#F5A524" stroke-width="2" stroke-linecap="round" fill="none"/></g>
+  <text x="150" y="105" font-family="IBM Plex Sans" font-weight="600" font-size="42" letter-spacing="-0.8" fill="#FAF8F3">Wau</text>
+  <text x="80" y="196" font-family="IBM Plex Mono" font-weight="500" font-size="24" fill="#F7B84B">Docs · Getting started</text>
+  <text x="76" y="284" font-family="IBM Plex Sans" font-weight="600" font-size="84" letter-spacing="-2.6" fill="#FAF8F3">Capture your first</text>
+  <text x="76" y="376" font-family="IBM Plex Sans" font-weight="600" font-size="84" letter-spacing="-2.6" fill="#F7B84B">email in 5 minutes.</text>
+  <rect x="80" y="520" width="56" height="3" fill="#F5A524"/>
+  <text x="80" y="566" font-family="IBM Plex Sans" font-weight="500" font-size="26" fill="#A3AEC4">SMTP settings · REST API · MCP server</text>
+  <text x="1120" y="566" text-anchor="end" font-family="IBM Plex Mono" font-weight="500" font-size="24" fill="#FAF8F3">waumail.my</text>
+</svg>

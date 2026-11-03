@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Icon from '../components/Icon.astro';
-import { CONSOLE_URL } from '../consts';
+import { registerUrl } from '../consts';
 import '../styles/docs.css';
 
 const sections = [
@@ -25,8 +25,10 @@ const mcpJson = `{
 ---
 
 <BaseLayout
-    title="Getting started — Wau Docs"
+    title="Getting started with Wau — capture your first email"
     description="Capture your first email with Wau: SMTP settings, a test message, the REST API and the MCP server."
+    image="/og/docs.png"
+    imageAlt="Wau docs: capture your first email in 5 minutes."
     current="docs"
 >
     <main id="main" class="wrap docs">
@@ -45,7 +47,7 @@ const mcpJson = `{
 
             <h2 id="account">1. Create an account</h2>
             <p>
-                Sign up at <a href={`${CONSOLE_URL}/register`}>console.waumail.my</a>. A personal workspace and your first inbox are created for
+                <a href={registerUrl('docs-step')}>Create an account at console.waumail.my</a>. A personal workspace and your first inbox are created for
                 you. The Free plan needs no card.
             </p>
 
@@ -111,7 +113,7 @@ const mcpJson = `{
             </p>
 
             <div class="next">
-                <a class="card" href={`${CONSOLE_URL}/register`}><span>Next</span>Create your account</a>
+                <a class="card" href={registerUrl('docs-next')}><span>Next</span>Create your account</a>
                 <a class="card" href="/pricing"><span>Plans</span>Compare plans and limits</a>
             </div>
         </article>

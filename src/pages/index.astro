@@ -1,7 +1,8 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Icon from '../components/Icon.astro';
-import { CONSOLE_URL, CONTACT_EMAIL, PLANS, rm, count } from '../consts';
+import { CONTACT_EMAIL, registerUrl, PLANS, rm, count } from '../consts';
+import { faqPage, softwareApplication } from '../seo';
 import '../styles/home.css';
 
 const mcpJson = `{
@@ -33,7 +34,7 @@ const faqs = [
 ];
 ---
 
-<BaseLayout current="home">
+<BaseLayout current="home" schema={[softwareApplication, faqPage(faqs)]}>
     <main id="main">
         <section class="hero">
             <div class="wrap hero-grid">
@@ -44,7 +45,7 @@ const faqs = [
                         instead of a customer's. Nothing is delivered. Priced in ringgit, with no per-seat bills.
                     </p>
                     <div class="cta-row">
-                        <a class="btn btn-primary btn-lg" href={`${CONSOLE_URL}/register`}>Start free <Icon name="arrow-right" /></a>
+                        <a class="btn btn-primary btn-lg" href={registerUrl('home-hero')}>Start free <Icon name="arrow-right" /></a>
                         <a class="btn btn-lg" href="/docs">Read the setup guide</a>
                     </div>
                     <div class="facts"><span>SMTP on port 2525</span><span>REST API</span><span>MCP server</span><span>Free plan, no card</span></div>

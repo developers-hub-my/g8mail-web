@@ -2,7 +2,7 @@
 import WauMark from './WauMark.astro';
 import Icon from './Icon.astro';
 import ThemeToggle from './ThemeToggle.astro';
-import { CONSOLE_URL } from '../consts';
+import { CONSOLE_URL, registerUrl } from '../consts';
 
 interface Props {
     current?: 'home' | 'pricing' | 'docs';
@@ -27,7 +27,7 @@ const links = [
         <div class="head-cta">
             <ThemeToggle />
             <a class="signin" href={`${CONSOLE_URL}/login`}>Sign in</a>
-            <a class="btn btn-primary" href={`${CONSOLE_URL}/register`}>Start free</a>
+            <a class="btn btn-primary" href={registerUrl('header')}>Start free</a>
             <button class="btn btn-ghost btn-icon site-menu" type="button" aria-expanded="false" aria-controls="mobile-nav" data-menu-toggle>
                 <Icon name="menu" /><span class="sr-only">Menu</span>
             </button>
@@ -37,7 +37,7 @@ const links = [
         <div class="wrap">
             {links.map((l) => <a href={l.href} aria-current={l.key === current ? 'page' : undefined}>{l.label}</a>)}
             <a href={`${CONSOLE_URL}/login`}>Sign in</a>
-            <a class="btn btn-primary btn-lg" href={`${CONSOLE_URL}/register`}>Start free</a>
+            <a class="btn btn-primary btn-lg" href={registerUrl('mobile-menu')}>Start free</a>
         </div>
     </nav>
 </header>

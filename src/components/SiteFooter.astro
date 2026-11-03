@@ -1,6 +1,6 @@
 ---
 import WauMark from './WauMark.astro';
-import { CONSOLE_URL, CONTACT_EMAIL } from '../consts';
+import { CONSOLE_URL, CONTACT_EMAIL, registerUrl } from '../consts';
 
 const year = new Date().getFullYear();
 ---
@@ -24,15 +24,15 @@ const year = new Date().getFullYear();
             <h2>Console</h2>
             <ul>
                 <li><a href={`${CONSOLE_URL}/login`}>Sign in</a></li>
-                <li><a href={`${CONSOLE_URL}/register`}>Create an account</a></li>
+                <li><a href={registerUrl('footer')}>Create an account</a></li>
             </ul>
         </div>
         <div>
             <h2>Company</h2>
             <ul>
-                <li><a href="https://g8suite.com">G8Suite</a></li>
+                <li><a href="https://g8suite.com" rel="noopener">G8Suite</a></li>
                 <li><a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a></li>
-                <li>&copy; {year} <a href="https://devhub.my">Developers Hub Sdn Bhd</a></li>
+                <li>&copy; {year} <a href="https://devhub.my" rel="noopener">Developers Hub Sdn Bhd</a></li>
             </ul>
         </div>
     </div>

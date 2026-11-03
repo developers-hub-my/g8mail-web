@@ -2,6 +2,13 @@ export const SITE_URL = 'https://waumail.my';
 export const CONSOLE_URL = 'https://console.waumail.my';
 export const CONTACT_EMAIL = 'hello@waumail.my';
 
+// Sign-up link tagged so the console's analytics can tell which site CTA sent the visitor.
+export const registerUrl = (placement: string) => {
+    const url = new URL('/register', CONSOLE_URL);
+    url.search = new URLSearchParams({ utm_source: 'waumail.my', utm_medium: 'website', utm_campaign: 'site', utm_content: placement }).toString();
+    return url.href;
+};
+
 // Mirrors platform/g8mail-app/database/seeders/PlanSeeder.php. Prices in ringgit,
 // `null` means unlimited, members excludes the owner. Update both together.
 // The seeder's `features` (webhooks, audit_export) are not built and stay off the site.
