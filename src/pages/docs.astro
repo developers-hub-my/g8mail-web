@@ -1,0 +1,119 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+import { CONSOLE_URL } from '../consts';
+import '../styles/docs.css';
+
+const sections = [
+    ['account', 'Create an account'],
+    ['smtp', 'Point your app at Wau'],
+    ['send', 'Send a test message'],
+    ['api', 'REST API'],
+    ['mcp', 'MCP server'],
+    ['production', 'Going to production'],
+];
+
+const mcpJson = `{
+  <span class="k">"mcpServers"</span>: {
+    <span class="k">"wau"</span>: {
+      <span class="k">"type"</span>: <span class="v">"http"</span>,
+      <span class="k">"url"</span>: <span class="v">"https://console.waumail.my/mcp/tasks"</span>,
+      <span class="k">"headers"</span>: { <span class="k">"Authorization"</span>: <span class="v">"Bearer \${WAU_TOKEN}"</span> }
+    }
+  }
+}`;
+---
+
+<BaseLayout
+    title="Getting started — Wau Docs"
+    description="Capture your first email with Wau: SMTP settings, a test message, the REST API and the MCP server."
+    current="docs"
+>
+    <main id="main" class="wrap docs">
+        <nav class="docs-nav" aria-label="Documentation">
+            <h2>Getting started</h2>
+            {sections.map(([id, label]) => <a href={`#${id}`}>{label}</a>)}
+        </nav>
+
+        <article class="prose">
+            <p class="label-mono">Getting started · 5 minutes</p>
+            <h1 style="margin-top:8px">Capture your first email</h1>
+            <p style="margin-top:16px;font-size:var(--text-lg)">
+                Wau is an SMTP server that accepts mail and never delivers it. You change your app's mail settings, send as usual, and read every
+                message in the console.
+            </p>
+
+            <h2 id="account">1. Create an account</h2>
+            <p>
+                Sign up at <a href={`${CONSOLE_URL}/register`}>console.waumail.my</a>. A personal workspace and your first inbox are created for
+                you. The Free plan needs no card.
+            </p>
+
+            <h2 id="smtp">2. Point your app at Wau</h2>
+            <p>Open the inbox and choose <strong>SMTP settings</strong>. Copy the values into your app's environment:</p>
+            <div class="code">
+                <div class="code-head"><span>.env</span><button class="btn" type="button" data-copy="env-snippet"><Icon name="copy" /><span data-label>Copy</span></button></div>
+<pre id="env-snippet" tabindex="0"><span class="k">MAIL_MAILER</span>=smtp
+<span class="k">MAIL_HOST</span>=<span class="v">smtp.waumail.my</span>
+<span class="k">MAIL_PORT</span>=<span class="v">2525</span>
+<span class="k">MAIL_USERNAME</span>=<span class="v">&lt;inbox username&gt;</span>
+<span class="k">MAIL_PASSWORD</span>=<span class="v">&lt;inbox password&gt;</span>
+<span class="k">MAIL_ENCRYPTION</span>=<span class="v">null</span></pre>
+            </div>
+            <div class="callout">
+                <Icon name="info" />
+                <p><code>MAIL_ENCRYPTION=null</code> is intentional. The listener does not offer STARTTLS; TLS is handled in front of it. Do not change it to <code>tls</code>.</p>
+            </div>
+
+            <h2 id="send">3. Send a test message</h2>
+            <p>From a Laravel app:</p>
+            <div class="code">
+                <div class="code-head"><span>tinker</span></div>
+<pre tabindex="0"><span class="k">Mail</span>::raw(<span class="v">'Hello from staging'</span>, fn (<span class="k">$m</span>) =&gt; <span class="k">$m</span>-&gt;to(<span class="v">'qa@example.com'</span>)-&gt;subject(<span class="v">'Wau test'</span>));</pre>
+            </div>
+            <p>
+                The message appears in the inbox within a few seconds. Open it to see the HTML, text, raw source, headers, attachments,
+                authentication results and spam score.
+            </p>
+
+            <h2 id="api">4. Read mail from tests with the REST API</h2>
+            <p>Create a token under <strong>Settings → API tokens</strong>. Tokens start with <code>wau_</code> and are tied to one workspace.</p>
+            <div class="code">
+                <div class="code-head"><span>curl</span></div>
+<pre tabindex="0"><span class="k">curl</span> https://console.waumail.my/api/sandboxes \
+  -H <span class="v">"Authorization: Bearer $WAU_TOKEN"</span> \
+  -H <span class="v">"X-API-Version: v1"</span></pre>
+            </div>
+            <table class="data">
+                <thead><tr><th scope="col">Limit</th><th scope="col">Value</th></tr></thead>
+                <tbody>
+                    <tr><td>General requests</td><td class="num">120 / minute per token</td></tr>
+                    <tr><td>Send and batch</td><td class="num">60 / minute per token</td></tr>
+                    <tr><td>Batch size</td><td class="num">500 messages</td></tr>
+                </tbody>
+            </table>
+
+            <h2 id="mcp">5. Optional: read mail from your coding agent</h2>
+            <p>
+                Wau runs a read-only MCP server at <code>https://console.waumail.my/mcp/tasks</code>. It uses the same API token. Add it to your
+                project's <code>.mcp.json</code>:
+            </p>
+            <div class="code">
+                <div class="code-head"><span>.mcp.json</span></div>
+                <pre tabindex="0" set:html={mcpJson} />
+            </div>
+            <p>Then ask your agent things like "show the last password-reset email in shopfront-staging".</p>
+
+            <h2 id="production">6. Going to production</h2>
+            <p>
+                Production is the reverse of step 2: point the same mail settings at your real provider. Wau never delivers mail and is never in
+                the production path, so keep its credentials in development, staging and UAT environments only.
+            </p>
+
+            <div class="next">
+                <a class="card" href={`${CONSOLE_URL}/register`}><span>Next</span>Create your account</a>
+                <a class="card" href="/pricing"><span>Plans</span>Compare plans and limits</a>
+            </div>
+        </article>
+    </main>
+</BaseLayout>

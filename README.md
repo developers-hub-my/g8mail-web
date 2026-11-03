@@ -6,7 +6,6 @@ Marketing landing page for **Wau** — developer email sandbox by G8Suite (propr
 - **App (console)**: [console.waumail.my](https://console.waumail.my)
 - **Stack**: [Astro](https://astro.build) + TailwindCSS v4, deployed on Netlify as a static site.
 
-The design mirrors `g8mail-app/resources/views/welcome.blade.php`.
 
 ## Development
 
@@ -28,21 +27,27 @@ npm run preview   # preview the production build
 
 ## Structure
 
+Design system: "Kite paper & ink" — see `documentation/05-design/DESIGN.md` in the g8mail
+repo. Tokens live in `src/styles/global.css` (light and dark, theme follows the system
+unless the visitor pins one). Plan limits in `src/consts.ts` mirror
+`g8mail-app/database/seeders/PlanSeeder.php`; change both together.
+
 ```text
 src/
-├── consts.ts            # Site / console / GitHub URLs
+├── consts.ts               # Site / console URLs, PLANS (from PlanSeeder)
 ├── layouts/
-│   └── BaseLayout.astro  # <head>, SEO meta, fonts, dark shell
+│   └── BaseLayout.astro     # <head>, SEO meta, fonts, theme, header/footer, shared JS
 ├── components/
-│   ├── Nav.astro         # Fixed top nav
-│   ├── Hero.astro        # Headline + captured-email card
-│   ├── Features.astro    # 6-card feature grid
-│   ├── CodeSample.astro  # .env / PHP / curl tab switcher
-│   ├── Pricing.astro     # 4 tiers + monthly/annual toggle
-│   ├── Faq.astro         # Accordion
-│   ├── Footer.astro
-│   ├── Icon.astro        # Inline Lucide icons
-│   └── WauMark.astro     # Wau bulan logo mark
+│   ├── SiteHeader.astro     # Sticky nav + mobile menu
+│   ├── SiteFooter.astro
+│   ├── ThemeToggle.astro    # light / auto / dark
+│   ├── Icon.astro           # Inline Lucide icons
+│   └── WauMark.astro        # Wau bulan logo mark
+├── styles/
+│   ├── global.css           # Tokens, primitives, site chrome
+│   ├── home.css · pricing.css · docs.css
 └── pages/
-    └── index.astro
+    ├── index.astro          # Home
+    ├── pricing.astro        # Plans, compare table, billing notes
+    └── docs.astro           # Public getting-started guide
 ```

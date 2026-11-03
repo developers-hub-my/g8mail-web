@@ -1,0 +1,43 @@
+---
+import WauMark from './WauMark.astro';
+import Icon from './Icon.astro';
+import ThemeToggle from './ThemeToggle.astro';
+import { CONSOLE_URL } from '../consts';
+
+interface Props {
+    current?: 'home' | 'pricing' | 'docs';
+}
+
+const { current } = Astro.props;
+const links = [
+    { key: 'product', label: 'Product', href: '/#inspector' },
+    { key: 'pricing', label: 'Pricing', href: '/pricing' },
+    { key: 'docs', label: 'Docs', href: '/docs' },
+    { key: 'faq', label: 'FAQ', href: '/#faq' },
+];
+---
+
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+    <div class="wrap">
+        <a class="logo" href="/" aria-label="Wau home"><WauMark />Wau</a>
+        <nav class="site-nav" aria-label="Primary">
+            {links.map((l) => <a href={l.href} aria-current={l.key === current ? 'page' : undefined}>{l.label}</a>)}
+        </nav>
+        <div class="head-cta">
+            <ThemeToggle />
+            <a class="signin" href={`${CONSOLE_URL}/login`}>Sign in</a>
+            <a class="btn btn-primary" href={`${CONSOLE_URL}/register`}>Start free</a>
+            <button class="btn btn-ghost btn-icon site-menu" type="button" aria-expanded="false" aria-controls="mobile-nav" data-menu-toggle>
+                <Icon name="menu" /><span class="sr-only">Menu</span>
+            </button>
+        </div>
+    </div>
+    <nav class="mobile-nav" id="mobile-nav" aria-label="Primary (mobile)" hidden>
+        <div class="wrap">
+            {links.map((l) => <a href={l.href} aria-current={l.key === current ? 'page' : undefined}>{l.label}</a>)}
+            <a href={`${CONSOLE_URL}/login`}>Sign in</a>
+            <a class="btn btn-primary btn-lg" href={`${CONSOLE_URL}/register`}>Start free</a>
+        </div>
+    </nav>
+</header>

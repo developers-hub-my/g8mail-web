@@ -1,0 +1,140 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+import { CONSOLE_URL, PLANS, rm, count } from '../consts';
+import '../styles/pricing.css';
+
+const features = (p: (typeof PLANS)[number]) =>
+    p.workspaces === null
+        ? ['Unlimited workspaces and inboxes', 'Unlimited messages', `${p.retention}-day retention`, 'Unlimited members']
+        : [
+              `${p.workspaces} workspace${p.workspaces > 1 ? 's' : ''} · ${p.inboxes} inboxes${p.workspaces > 1 ? ' each' : ''}`,
+              `${count(p.messages)} messages / month`,
+              `${p.retention}-day retention`,
+              `You + ${p.members} member${p.members > 1 ? 's' : ''}`,
+          ];
+
+const rows: [string, (p: (typeof PLANS)[number]) => string][] = [
+    ['Monthly price', (p) => rm(p.monthly)],
+    ['Annual price', (p) => rm(p.annual)],
+    ['Workspaces', (p) => count(p.workspaces)],
+    ['Inboxes per workspace', (p) => count(p.inboxes)],
+    ['Messages per month', (p) => count(p.messages)],
+    ['Members (owner not counted)', (p) => count(p.members)],
+    ['Retention', (p) => `${p.retention} days`],
+    ['Inspector, REST API, MCP', () => 'Yes'],
+    ['Roles: Owner, Admin, Member, Viewer', () => 'Yes'],
+    ['Two-factor sign-in', () => 'Yes'],
+];
+---
+
+<BaseLayout
+    title="Pricing — Wau"
+    description="Flat Wau plans per workspace, in ringgit. Free, Solo, Team and Business, with a 14-day trial on paid plans."
+    current="pricing"
+>
+    <main id="main" class="wrap">
+        <div class="p-head">
+            <div>
+                <h1 class="h-2">Pricing</h1>
+                <p class="lede" style="margin-top:12px">Flat plans per workspace, in ringgit. Every paid plan starts with a 14-day trial and no payment details up front.</p>
+            </div>
+            <div class="cycle" role="group" aria-label="Billing cycle">
+                <button type="button" aria-pressed="true" data-cycle="m">Monthly</button>
+                <button type="button" aria-pressed="false" data-cycle="y">Annual <span class="save">2 months free</span></button>
+            </div>
+        </div>
+
+        <div class="plans">
+            {
+                PLANS.map((p) => {
+                    const id = `p-${p.name.toLowerCase()}`;
+                    const paid = p.monthly > 0;
+                    const rec = 'recommended' in p;
+                    return (
+                        <section class:list={['card plan', { rec }]} aria-labelledby={id}>
+                            {rec && <span class="chip chip-accent tag">Recommended for teams</span>}
+                            <h2 id={id}>{p.name}</h2>
+                            <p class="for">{p.for}</p>
+                            {paid ? (
+                                <>
+                                    <p
+                                        class="price"
+                                        data-m={`${rm(p.monthly)} <small>/ month</small>`}
+                                        data-y={`${rm(p.annual)} <small>/ year</small>`}
+                                        set:html={`${rm(p.monthly)} <small>/ month</small>`}
+                                    />
+                                    <p
+                                        class="price-note"
+                                        data-m={`or ${rm(p.annual)} / year`}
+                                        data-y={`${rm(Math.round((p.annual / 12) * 100) / 100)} / month, billed yearly`}
+                                    >
+                                        or {rm(p.annual)} / year
+                                    </p>
+                                </>
+                            ) : (
+                                <>
+                                    <p class="price">{rm(0)}</p>
+                                    <p class="price-note">&nbsp;</p>
+                                </>
+                            )}
+                            <a class:list={['btn', { 'btn-primary': rec }]} href={`${CONSOLE_URL}/register`}>
+                                {paid ? 'Start 14-day trial' : 'Start free'}
+                            </a>
+                            <ul>
+                                {features(p).map((f) => (
+                                    <li>
+                                        <Icon name="check" />
+                                        <span>{f}</span>
+                                    </li>
+                                ))}
+                            </ul>
+                        </section>
+                    );
+                })
+            }
+        </div>
+
+        <section class="compare" aria-labelledby="cmp">
+            <h2 id="cmp" class="h-2" style="font-size:var(--text-2xl);margin-bottom:20px">Compare plans</h2>
+            <div class="compare-wrap" tabindex="0" role="region" aria-labelledby="cmp">
+                <table class="data">
+                    <thead>
+                        <tr>
+                            <th scope="col"><span class="sr-only">Limit</span></th>
+                            {PLANS.map((p) => <th scope="col">{p.name}</th>)}
+                        </tr>
+                    </thead>
+                    <tbody class="num">
+                        {
+                            rows.map(([label, cell]) => (
+                                <tr>
+                                    <th scope="row">{label}</th>
+                                    {PLANS.map((p) => <td>{cell(p)}</td>)}
+                                </tr>
+                            ))
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <div class="billing-notes">
+            <div><h3>How you pay</h3><p>FPX through BayarCash. Renewals run on an FPX Direct Debit mandate, with a one-off FPX payment as a fallback. PDF invoices for every charge.</p></div>
+            <div><h3>Trials and limits</h3><p>Your first paid plan in a workspace starts a 14-day trial. When a workspace reaches its monthly message limit, new mail is not captured until the next period or an upgrade.</p></div>
+            <div><h3>Cancelling</h3><p>Cancel at any time; the plan runs to the end of the paid period. A late payment gets a 7-day grace window. On cancellation we email you an export of your data.</p></div>
+        </div>
+    </main>
+</BaseLayout>
+
+<script>
+    const cycleBtns = document.querySelectorAll<HTMLElement>('[data-cycle]');
+    cycleBtns.forEach((b) =>
+        b.addEventListener('click', () => {
+            const key = b.dataset.cycle as 'm' | 'y';
+            cycleBtns.forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+            document.querySelectorAll<HTMLElement>('.plan .price[data-m]').forEach((el) => (el.innerHTML = el.dataset[key]!));
+            document.querySelectorAll<HTMLElement>('.plan .price-note[data-m]').forEach((el) => (el.textContent = el.dataset[key]!));
+        }),
+    );
+</script>

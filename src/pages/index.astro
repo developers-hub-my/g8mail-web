@@ -1,20 +1,216 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import Nav from '../components/Nav.astro';
-import Hero from '../components/Hero.astro';
-import Features from '../components/Features.astro';
-import CodeSample from '../components/CodeSample.astro';
-import Pricing from '../components/Pricing.astro';
-import Faq from '../components/Faq.astro';
-import Footer from '../components/Footer.astro';
+import Icon from '../components/Icon.astro';
+import { CONSOLE_URL, CONTACT_EMAIL, PLANS, rm, count } from '../consts';
+import '../styles/home.css';
+
+const mcpJson = `{
+  <span class="k">"mcpServers"</span>: {
+    <span class="k">"wau"</span>: {
+      <span class="k">"type"</span>: <span class="v">"http"</span>,
+      <span class="k">"url"</span>: <span class="v">"https://console.waumail.my/mcp/tasks"</span>,
+      <span class="k">"headers"</span>: { <span class="k">"Authorization"</span>: <span class="v">"Bearer \${WAU_TOKEN}"</span> }
+    }
+  }
+}`;
+
+const planLines = (p: (typeof PLANS)[number]) =>
+    p.workspaces === null
+        ? ['Unlimited workspaces and inboxes', 'Unlimited messages and members', `${p.retention}-day retention`]
+        : [
+              p.workspaces > 1 ? `${p.workspaces} workspaces · ${p.inboxes} inboxes each` : `${p.inboxes} inboxes`,
+              `${count(p.messages)} messages / month`,
+              p.workspaces > 1 ? `${p.members} members · ${p.retention}-day retention` : `${p.retention}-day retention`,
+          ];
+
+const faqs = [
+    { q: 'Does Wau deliver mail to real inboxes?', a: 'No. Wau accepts every message and keeps it for inspection. When you go to production, point your mail settings at your real provider. Wau is never in that path.' },
+    { q: 'Do I need a Wau SDK?', a: 'No. Wau speaks standard SMTP for capture and a documented REST API for inspection. Your app keeps its existing framework mailer; you only change the mail settings.' },
+    { q: 'Can I self-host Wau?', a: `No. Wau is a hosted service that we run. If your organisation needs something different, write to ${CONTACT_EMAIL}.` },
+    { q: 'Why is MAIL_ENCRYPTION set to null?', a: "The SMTP listener does not offer STARTTLS today; TLS is handled in front of it. Use the values shown in your inbox's SMTP settings." },
+    { q: 'Can I send into an inbox without SMTP?', html: 'Yes. <code>POST /api/send/{inbox}</code> accepts a JSON message, and <code>/api/batch/{inbox}</code> takes up to 500 at once. Useful where outbound SMTP ports are blocked.' },
+    { q: 'What happens to my data if I cancel?', a: 'Your plan runs to the end of the paid period, and an export of your workspace data is emailed to you.' },
+];
 ---
 
-<BaseLayout>
-    <Nav />
-    <Hero />
-    <Features />
-    <CodeSample />
-    <Pricing />
-    <Faq />
-    <Footer />
+<BaseLayout current="home">
+    <main id="main">
+        <section class="hero">
+            <div class="wrap hero-grid">
+                <div>
+                    <h1 class="h-display">Catch dev emails.<br /><em>Inspect everything.</em><br />Never deliver.</h1>
+                    <p class="lede">
+                        Point <code>MAIL_HOST</code> at Wau and every message your app sends in development, staging or UAT lands in a shared inbox
+                        instead of a customer's. Nothing is delivered. Priced in ringgit, with no per-seat bills.
+                    </p>
+                    <div class="cta-row">
+                        <a class="btn btn-primary btn-lg" href={`${CONSOLE_URL}/register`}>Start free <Icon name="arrow-right" /></a>
+                        <a class="btn btn-lg" href="/docs">Read the setup guide</a>
+                    </div>
+                    <div class="facts"><span>SMTP on port 2525</span><span>REST API</span><span>MCP server</span><span>Free plan, no card</span></div>
+                </div>
+
+                <div class="flight" role="img" aria-label="Example: an app's .env sends a message that Wau captures">
+                    <div class="code">
+                        <div class="code-head"><span>.env</span><span>your app</span></div>
+<pre><span class="k">MAIL_MAILER</span>=smtp
+<span class="k">MAIL_HOST</span>=<span class="v">smtp.waumail.my</span>
+<span class="k">MAIL_PORT</span>=<span class="v">2525</span>
+<span class="k">MAIL_USERNAME</span>=<span class="v">a8f3c21e9b</span>
+<span class="k">MAIL_PASSWORD</span>=<span class="v">••••••••••••</span>
+<span class="k">MAIL_ENCRYPTION</span>=<span class="v">null</span></pre>
+                    </div>
+                    <svg class="path" viewBox="0 0 200 100" fill="none" aria-hidden="true"><path d="M0 4 C 70 0, 120 100, 200 96" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path></svg>
+                    <article class="card caught">
+                        <div class="caught-head"><span>shopfront-staging</span><span class="chip chip-accent"><span class="dot"></span>caught 14:02:37</span></div>
+                        <div class="caught-body">
+                            <p class="subj">Your order #4821 has shipped</p>
+                            <p class="muted" style="font-size:var(--text-sm)">Hi Siti, good news. Your parcel left our Shah Alam warehouse this morning&hellip;</p>
+                            <dl class="caught-meta"><dt>from</dt><dd>orders@shopfront.test</dd><dt>to</dt><dd>siti.aminah@example.com</dd></dl>
+                        </div>
+                        <div class="caught-foot"><span class="chip chip-ok">spf pass</span><span class="chip chip-ok">dkim pass</span><span class="chip chip-ok">spam 1.3</span><span class="chip">2 links</span></div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section class="band" id="inspector">
+            <div class="wrap">
+                <p class="label-mono">The inspector</p>
+                <h2 class="h-2" style="margin-top:10px;max-width:20ch">Everything the mail client would hide from you.</h2>
+                <div class="insp-grid">
+                    <figure class="card mini" style="margin:0">
+                        <div class="mini-body">
+                            <div class="mini-list" aria-hidden="true">
+                                <div class="mini-row on unread"><div class="from"><span>Shopfront</span><span class="num">14:02</span></div><div class="s">Your order #4821 has shipped</div></div>
+                                <div class="mini-row"><div class="from"><span>Shopfront</span><span class="num">13:58</span></div><div class="s">Reset your password</div></div>
+                                <div class="mini-row"><div class="from"><span>Billing</span><span class="num">13:41</span></div><div class="s">Invoice INV-000231 is ready</div></div>
+                                <div class="mini-row"><div class="from"><span>Shopfront</span><span class="num">12:10</span></div><div class="s">订单确认 #4820</div></div>
+                            </div>
+                            <div class="mini-view">
+                                <div class="tabs" role="tablist" aria-label="Message views (example)">
+                                    <button type="button" role="tab" aria-selected="true" aria-controls="mv-html" id="mt-html">HTML</button>
+                                    <button type="button" role="tab" aria-selected="false" aria-controls="mv-head" id="mt-head" tabindex="-1">Headers</button>
+                                    <button type="button" role="tab" aria-selected="false" aria-controls="mv-spam" id="mt-spam" tabindex="-1">Spam</button>
+                                </div>
+                                <div id="mv-html" role="tabpanel" aria-labelledby="mt-html">
+                                    <div class="mini-email">
+                                        <strong>Your order is on the way</strong>
+                                        <p style="margin-top:8px">Hi Siti, your parcel left our Shah Alam warehouse this morning. Tracking: MY48210093.</p>
+                                        <span class="btnmail">Track parcel</span>
+                                    </div>
+                                    <div class="checks"><span class="chip chip-ok">spf pass</span><span class="chip chip-ok">dkim pass · s1 · 2048 bit</span><span class="chip chip-warn">dmarc none</span><span class="chip">render: Gmail approx.</span></div>
+                                </div>
+                                <div id="mv-head" role="tabpanel" aria-labelledby="mt-head" hidden>
+                                    <table class="data num" style="font-size:var(--text-xs)">
+                                        <tr><td class="subtle">Message-ID</td><td>&lt;7f2c91@shopfront.test&gt;</td></tr>
+                                        <tr><td class="subtle">Content-Type</td><td>multipart/alternative</td></tr>
+                                        <tr><td class="subtle">X-Mailer</td><td>Laravel Mailer</td></tr>
+                                    </table>
+                                </div>
+                                <div id="mv-spam" role="tabpanel" aria-labelledby="mt-spam" hidden>
+                                    <p><span class="num" style="font-size:var(--text-2xl);font-weight:600">1.3</span> <span class="subtle">/ threshold 5.0</span> <span class="chip chip-ok">clean</span></p>
+                                    <p class="muted" style="font-size:var(--text-sm);margin-top:8px">Rule breakdown from SpamAssassin, when your workspace has it enabled.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <figcaption class="mockup-note">Sample data. The real inspector lives at console.waumail.my.</figcaption>
+                    </figure>
+                    <dl class="points">
+                        <div><dt>Five ways to read one message</dt><dd>HTML in a sandboxed frame, plain text, raw source, parsed headers and attachments. Download the original <code>.eml</code> any time.</dd></div>
+                        <div><dt>Authentication results</dt><dd>SPF, DKIM, DMARC and BIMI results parsed from the received headers, next to the message.</dd></div>
+                        <div><dt>Spam score with the reasons</dt><dd>A SpamAssassin score and verdict with the rule-by-rule breakdown, so you see why a template trips filters.</dd></div>
+                        <div><dt>Render approximations</dt><dd>Gmail, Outlook, Apple Mail and dark-mode approximations. Close enough to catch the obvious breakage, not a replacement for a rendering farm.</dd></div>
+                        <div><dt>Links checked for you</dt><dd>Every link is extracted and its HTTP status checked in the background.</dd></div>
+                    </dl>
+                </div>
+            </div>
+        </section>
+
+        <section class="band" id="setup">
+            <div class="wrap setup-grid">
+                <div>
+                    <p class="label-mono">Setup</p>
+                    <h2 class="h-2" style="margin-top:10px">A <code style="font-size:.85em">.env</code> change, not an SDK.</h2>
+                    <ol class="steps">
+                        <li><div><strong>Create an inbox</strong><p>Your first inbox is made when you sign up. Each one has its own SMTP credentials.</p></div></li>
+                        <li><div><strong>Swap the mail settings</strong><p>Paste the mail lines into your app's environment. Your framework mailer keeps working as is.</p></div></li>
+                        <li><div><strong>Send and inspect</strong><p>New mail shows up in the console within seconds. Read it there, over the REST API, or from your editor through MCP.</p></div></li>
+                    </ol>
+                    <p class="muted" style="font-size:var(--text-sm);margin-top:28px">Going to production is the reverse: point the same lines at your real provider. Wau is never in the production path.</p>
+                </div>
+                <div class="code">
+                    <div class="tabs" role="tablist" aria-label="Setup examples">
+                        <button type="button" role="tab" aria-selected="true" aria-controls="s-env" id="st-env">.env</button>
+                        <button type="button" role="tab" aria-selected="false" aria-controls="s-curl" id="st-curl" tabindex="-1">curl</button>
+                        <button type="button" role="tab" aria-selected="false" aria-controls="s-mcp" id="st-mcp" tabindex="-1">.mcp.json</button>
+                    </div>
+<pre id="s-env" role="tabpanel" aria-labelledby="st-env" tabindex="0"><span class="c"># Laravel shown. Any SMTP client works the same way.</span>
+<span class="k">MAIL_MAILER</span>=smtp
+<span class="k">MAIL_HOST</span>=<span class="v">smtp.waumail.my</span>
+<span class="k">MAIL_PORT</span>=<span class="v">2525</span>
+<span class="k">MAIL_USERNAME</span>=<span class="v">&lt;inbox username&gt;</span>
+<span class="k">MAIL_PASSWORD</span>=<span class="v">&lt;inbox password&gt;</span>
+<span class="k">MAIL_ENCRYPTION</span>=<span class="v">null</span></pre>
+<pre id="s-curl" role="tabpanel" aria-labelledby="st-curl" tabindex="0" hidden><span class="c"># List captured messages in one inbox</span>
+<span class="k">curl</span> https://console.waumail.my/api/sandboxes/<span class="k">$INBOX_ID</span>/messages \
+  -H <span class="v">"Authorization: Bearer $WAU_TOKEN"</span> \
+  -H <span class="v">"X-API-Version: v1"</span></pre>
+<pre id="s-mcp" role="tabpanel" aria-labelledby="st-mcp" tabindex="0" hidden set:html={mcpJson}></pre>
+                </div>
+            </div>
+        </section>
+
+        <section class="band">
+            <div class="wrap">
+                <p class="label-mono">Why Wau</p>
+                <h2 class="h-2" style="margin-top:10px;max-width:22ch">Built for teams that bill in ringgit.</h2>
+                <div class="why">
+                    <div><h3>Flat ringgit plans</h3><p>Four plans from RM 0. No per-seat pricing and no currency conversion on your card statement. Paid by FPX through BayarCash.</p></div>
+                    <div><h3>Workspaces and roles</h3><p>Owner, Admin, Member and Viewer. Give a client's QA team or a class of students read-only access to UAT mail.</p></div>
+                    <div><h3>A Mailtrap-shaped API</h3><p>Endpoints follow the Mailtrap Sandbox API shape, so porting test code is a small diff. It is not a drop-in SDK replacement.</p></div>
+                    <div><h3>Read mail from your agent</h3><p>A read-only MCP server lets Claude Code and other MCP clients list inboxes and read captured messages with your API token.</p></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="band" id="pricing">
+            <div class="wrap">
+                <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:end;gap:16px">
+                    <div><p class="label-mono">Pricing</p><h2 class="h-2" style="margin-top:10px">Start free. Pay per workspace, not per person.</h2></div>
+                    <a class="btn" href="/pricing">Compare plans <Icon name="arrow-right" /></a>
+                </div>
+                <div class="plans-strip">
+                    {
+                        PLANS.map((p) => (
+                            <div>
+                                <strong>{p.name}</strong>
+                                <p class="price">
+                                    {rm(p.monthly)} {p.monthly > 0 && <small>/ month</small>}
+                                </p>
+                                <ul>{planLines(p).map((l) => <li>{l}</li>)}</ul>
+                            </div>
+                        ))
+                    }
+                </div>
+            </div>
+        </section>
+
+        <section class="band" id="faq">
+            <div class="wrap">
+                <p class="label-mono">FAQ</p>
+                <h2 class="h-2" style="margin-top:10px">Straight answers.</h2>
+                <div class="faq">
+                    {
+                        faqs.map((f, i) => (
+                            <details open={i === 0}>
+                                <summary>{f.q}<Icon name="chevron-down" /></summary>
+                                {f.html ? <p set:html={f.html} /> : <p>{f.a}</p>}
+                            </details>
+                        ))
+                    }
+                </div>
+            </div>
+        </section>
+    </main>
 </BaseLayout>
